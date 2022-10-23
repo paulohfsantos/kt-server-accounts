@@ -26,28 +26,30 @@ class AccountController(val repo: AccountRepo) {
         return ResponseEntity.ok(repo.findAll())
     }
 
-    @GetMapping("/{id}")
-    fun getAccount(@PathVariable id: String): ResponseEntity<Account> {
-        return ResponseEntity.ok(repo.findById(id).orElse(null))
+    @GetMapping("/{doc}")
+    fun getAccount(@PathVariable doc: String): ResponseEntity<Account> {
+        return ResponseEntity.ok(repo.findByDoc(doc).orElse(null))
     }
 
-    @PutMapping("{doc}")
-    fun updateAccount(@PathVariable document: String, @RequestBody account: Account): ResponseEntity<Account> {
-        val findDoc = repo.findByDoc(document)
-        val accountDatabase = findDoc.orElseThrow {
-            RuntimeException("Account doc: $document not found")
+    @PutMapping("/{id}")
+    fun updateAccount(@PathVariable id: String, @RequestBody account: Account): ResponseEntity<Account> {
+        val user = repo.findById(id).orElse(null)
+        user.name = account.name
+        user.balance = account.balance
+        user.doc = account.doc
+
+        return ResponseEntity.ok(repo.save(user))
+    }
+
+    @DeleteMapping("/{doc}")
+    fun deleteAccount(@PathVariable doc: String) {
+        val user = repo.findByDoc(doc).ifPresent {
+            repo.delete(it)
         }
 
-        val onSave = repo.save(accountDatabase.copy(name = account.name, balance = account.balance))
-
-        return ResponseEntity.ok(onSave)
-
+        return user
     }
 
-    @DeleteMapping("{id}")
-    fun deleteAccount(@PathVariable id: String): ResponseEntity<String> {
-        repo.deleteById(id)
-        return ResponseEntity.ok(id)
-    }
+    // TODO: get object by document
 
 }
