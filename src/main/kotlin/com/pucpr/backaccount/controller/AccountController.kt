@@ -50,6 +50,4 @@ class AccountController(val repo: AccountRepo) {
         return user
     }
 
-    // TODO: get object by document
-
 }
