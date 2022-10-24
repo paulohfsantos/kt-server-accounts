@@ -1,13 +1,7 @@
-# Basic bank account CRUD
+# Basic account CRUD
 ___
 ## Techs
 - Kotlin
-- Docker
-
-## Objective
-
-Learn Kotlin for backend development
-with Docker and Swagger integration
 
 ___
 
